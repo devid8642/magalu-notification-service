@@ -9,7 +9,7 @@ class Base(DeclarativeBase):
     pass
 
 
-class CommunicationType(enum.Enum):
+class Channels(enum.Enum):
     EMAIL = 'email'
     SMS = 'sms'
     PUSH = 'push'
@@ -30,5 +30,5 @@ class Notification(Base):
     send_time = Column(DateTime, default=lambda: datetime.now(pytz.timezone('America/Sao_Paulo')))
     recipient = Column(String, nullable=False)
     message = Column(Text, nullable=False)
-    communication_type = Column(Enum(CommunicationType), nullable=False)
+    channel = Column(Enum(Channels), nullable=False)
     status = Column(Enum(NotificationStatus), default=NotificationStatus.PENDING, nullable=False)
