@@ -16,7 +16,9 @@ class NotificationRepository:
 
 class PostgresNotificationRepository(NotificationRepository):
     """Postgres implementation of NotificationRepository"""
-    async def create_notification(self, notification: Notification) -> Notification:
+    async def create_notification(self, notification_data: dict) -> Notification:
+        notification = Notification(**notification_data)
+
         async with self.session() as session:
             async with session.begin():
                 session.add(notification)

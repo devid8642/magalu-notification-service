@@ -9,7 +9,7 @@ class NotificationService:
     
     async def create_notification(self, notification_data: dict) -> Notification:
         notification = await self.notification_repository.create_notification(
-            Notification(**notification_data)
+            notification_data
         )
 
         return notification

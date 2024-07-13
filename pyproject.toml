@@ -23,6 +23,7 @@ pytest-cov = "^5.0.0"
 isort = "^5.13.2"
 blue = "^0.9.1"
 taskipy = "^1.13.0"
+pytest-asyncio = "^0.23.7"
 
 [build-system]
 requires = ["poetry-core"]
