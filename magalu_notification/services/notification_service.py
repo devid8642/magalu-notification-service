@@ -13,6 +13,11 @@ class NotificationService:
         )
 
         return notification
+    
+    async def get_notification(self, notification_id: int) -> Notification | None:
+        notification = await self.notification_repository.get_notification(notification_id)
+
+        return notification
 
 
 def get_notification_service():
