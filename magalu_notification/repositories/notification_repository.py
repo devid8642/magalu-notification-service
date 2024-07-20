@@ -1,11 +1,11 @@
 from magalu_notification.models.notification import Notification
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.ext.asyncio import async_sessionmaker
 
 
 class NotificationRepository:
     """Interface for NotificationRepository"""
-    def __init__(self, session: AsyncSession):
-        self.session = session
+    def __init__(self, session_factory: async_sessionmaker):
+        self.session_factory = session_factory
 
     async def create_notification(self, notification: Notification):
         raise NotImplementedError
@@ -19,7 +19,7 @@ class PostgresNotificationRepository(NotificationRepository):
     async def create_notification(self, notification_data: dict) -> Notification:
         notification = Notification(**notification_data)
 
-        async with self.session() as session:
+        async with self.session_factory() as session:
             async with session.begin():
                 session.add(notification)
                 await session.commit()
@@ -28,7 +28,7 @@ class PostgresNotificationRepository(NotificationRepository):
         return notification
     
     async def get_notification(self, notification_id: int) -> Notification | None:
-        async with self.session() as session:
+        async with self.session_factory() as session:
             notification = await session.get(Notification, notification_id)
 
         return notification
