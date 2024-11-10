@@ -48,24 +48,6 @@ def notification(notification_data):
     return Notification(id=1, **notification_data)
 
 
-# @pytest.fixture(scope='session')
-# def create_test_database():
-#     connection_string = (
-#         f'postgresql://{settings.DB_USER}:{settings.DB_PASSWORD}'
-#         f'@{settings.DB_HOST}:{settings.DB_PORT}/postgres'
-#     )
-
-#     with psycopg.connect(connection_string, autocommit=True) as conn:
-#         with conn.cursor() as cur:
-#             cur.execute('CREATE DATABASE test_db')
-
-#     yield
-
-#     with psycopg.connect(connection_string, autocommit=True) as conn:
-#         with conn.cursor() as cur:
-#             cur.execute('DROP DATABASE test_db')
-
-
 @pytest_asyncio.fixture(scope="session")
 async def test_engine():
     engine = create_async_engine("sqlite+aiosqlite:///:memory:", future=True)
