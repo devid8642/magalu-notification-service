@@ -1,12 +1,8 @@
 import pytz
-from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy import Column, Integer, String, DateTime, Enum, Text
 import enum
 from datetime import datetime
-
-
-class Base(DeclarativeBase):
-    pass
+from magalu_notification.db.base import Base
 
 
 class Channels(enum.Enum):

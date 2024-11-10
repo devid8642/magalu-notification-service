@@ -12,7 +12,7 @@ class NotificationRepository(ABC):
         self.session_factory = session_factory
 
     @abstractmethod
-    async def create_notification(self, notification_data: dict):
+    async def create_notification(self, notification_data: NotificationSchema) -> Notification:
         raise NotImplementedError
     
     @abstractmethod
@@ -20,7 +20,7 @@ class NotificationRepository(ABC):
         raise NotImplementedError
     
     @abstractmethod
-    async def update_notification(self, notification: Notification):
+    async def update_notification(self, notification: Notification) -> Notification:
         raise NotImplementedError
 
 
