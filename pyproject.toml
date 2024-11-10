@@ -45,6 +45,19 @@ extend_skip = ['migrations']
 [tool.blue]
 extend-exclude = '(migrations/)'
 
+[tool.coverage.run]
+omit = [
+    '*/tests/*',
+    '*/migrations/*',
+    '*/__pycache__/*',
+    '*/__init__.py',
+    'magalu_notification/db/*',
+    'settings.py',
+]
+disable_warnings = ["module-not-measured"]
+
 [tool.taskipy.tasks]
 req = "poetry export --without-hashes -f requirements.txt -o requirements.txt && poetry export --only dev --without-hashes -f requirements.txt -o requirements-dev.txt"
 run = "fastapi dev magalu_notification/main.py"
+test = 'pytest --cov=magalu_notification/'
+post_test = 'coverage html'
