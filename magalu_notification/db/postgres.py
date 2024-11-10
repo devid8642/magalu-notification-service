@@ -16,5 +16,5 @@ class PostgresConnection:
         return cls.CONNECTION
     
     @classmethod
-    def get_session(cls):
+    def get_session_factory(cls):
         return async_sessionmaker(cls.get_connection(), expire_on_commit=False)
