@@ -3,10 +3,11 @@ from magalu_notification.models.notification import Notification, NotificationSt
 from magalu_notification.repositories.notification_repository import PostgresNotificationRepository
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from magalu_notification import settings
+from magalu_notification.schemas.notification import SendNotificationSchema
 
 
 @pytest.mark.asyncio
-async def test_create_notification(send_notification_data, create_test_database):
+async def test_create_notification(send_notification_data: SendNotificationSchema, create_test_database):
     connection_string = (
         f'postgresql+psycopg://{settings.DB_USER}:{settings.DB_PASSWORD}'
         f'@{settings.DB_HOST}:{settings.DB_PORT}/test_db'
@@ -41,7 +42,7 @@ async def test_create_notification(send_notification_data, create_test_database)
 
 
 @pytest.mark.asyncio
-async def test_get_notification(send_notification_data, create_test_database):
+async def test_get_notification(send_notification_data: SendNotificationSchema, create_test_database):
     connection_string = (
         f'postgresql+psycopg://{settings.DB_USER}:{settings.DB_PASSWORD}'
         f'@{settings.DB_HOST}:{settings.DB_PORT}/test_db'
@@ -58,7 +59,7 @@ async def test_get_notification(send_notification_data, create_test_database):
 
     repository = PostgresNotificationRepository(session_factory)
 
-    notification = Notification(**send_notification_data)
+    notification = Notification(**send_notification_data.model_dump())
 
     async with session_factory() as session:
         async with session.begin():
@@ -79,7 +80,7 @@ async def test_get_notification(send_notification_data, create_test_database):
 
 
 @pytest.mark.asyncio
-async def test_update_notification(send_notification_data, create_test_database):
+async def test_update_notification(send_notification_data: SendNotificationSchema, create_test_database):
     connection_string = (
         f'postgresql+psycopg://{settings.DB_USER}:{settings.DB_PASSWORD}'
         f'@{settings.DB_HOST}:{settings.DB_PORT}/test_db'
@@ -96,7 +97,7 @@ async def test_update_notification(send_notification_data, create_test_database)
 
     repository = PostgresNotificationRepository(session_factory)
 
-    notification = Notification(**send_notification_data)
+    notification = Notification(**send_notification_data.model_dump())
 
     async with session_factory() as session:
         async with session.begin():

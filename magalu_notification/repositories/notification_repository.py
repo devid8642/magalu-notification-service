@@ -3,6 +3,8 @@ from abc import ABC, abstractmethod
 from magalu_notification.models.notification import Notification, NotificationStatus
 from sqlalchemy.ext.asyncio import async_sessionmaker
 
+from magalu_notification.schemas.notification import NotificationSchema
+
 
 class NotificationRepository(ABC):
     """Interface for NotificationRepository"""
@@ -24,8 +26,8 @@ class NotificationRepository(ABC):
 
 class PostgresNotificationRepository(NotificationRepository):
     """Postgres implementation of NotificationRepository"""
-    async def create_notification(self, notification_data: dict) -> Notification:
-        notification = Notification(**notification_data)
+    async def create_notification(self, notification_data: NotificationSchema) -> Notification:
+        notification = Notification(**notification_data.model_dump())
 
         async with self.session_factory() as session:
             async with session.begin():

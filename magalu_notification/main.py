@@ -14,7 +14,7 @@ async def send_notification(notification_data: SendNotificationSchema) -> Notifi
     notification_service = get_notification_service()
 
     notification = await notification_service.create_notification(
-        notification_data.model_dump()
+        notification_data
     )
 
     return notification

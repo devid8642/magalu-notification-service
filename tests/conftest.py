@@ -25,7 +25,7 @@ def notification_data():
 
 @pytest.fixture
 def send_notification_data(notification_data):
-    return SendNotificationSchema(**notification_data).model_dump()
+    return SendNotificationSchema(**notification_data)
 
 
 @pytest.fixture

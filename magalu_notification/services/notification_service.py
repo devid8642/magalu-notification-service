@@ -2,13 +2,14 @@ from magalu_notification.repositories.notification_repository import Notificatio
 from magalu_notification.models.notification import Notification, NotificationStatus
 from magalu_notification.db.postgres import PostgresConnection
 from .exceptions import NotificationNotFound, NotificationAlreadySended
+from magalu_notification.schemas.notification import NotificationSchema
 
 
 class NotificationService:
     def __init__(self, notification_repository: NotificationRepository):
         self.notification_repository = notification_repository
     
-    async def create_notification(self, notification_data: dict) -> Notification:
+    async def create_notification(self, notification_data: NotificationSchema) -> Notification:
         notification = await self.notification_repository.create_notification(
             notification_data
         )
