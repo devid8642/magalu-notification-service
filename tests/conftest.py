@@ -1,14 +1,17 @@
+import psycopg
 import pytest
 import pytest_asyncio
 from fastapi.testclient import TestClient
+from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
+
+from magalu_notification import settings
+from magalu_notification.db.base import Base
 from magalu_notification.main import app
 from magalu_notification.models.notification import Notification
-import psycopg
-from magalu_notification import settings
+from magalu_notification.repositories.notification_repository import (
+    PostgresNotificationRepository,
+)
 from magalu_notification.schemas.notification import SendNotificationSchema
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
-from magalu_notification.db.base import Base
-from magalu_notification.repositories.notification_repository import PostgresNotificationRepository
 
 
 @pytest.fixture
@@ -22,7 +25,7 @@ def notification_data():
         'recipient': 'example@example.com',
         'message': 'Test message',
         'send_time': '2024-07-07T14:48:35.961116',
-        'channel': 'email'
+        'channel': 'email',
     }
 
 
@@ -39,7 +42,7 @@ def notification_response():
         'message': 'Test message',
         'send_time': '2024-07-07T14:48:35.961116',
         'channel': 'email',
-        'status': 'pending'
+        'status': 'pending',
     }
 
 
@@ -48,9 +51,9 @@ def notification(notification_data):
     return Notification(id=1, **notification_data)
 
 
-@pytest_asyncio.fixture(scope="session")
+@pytest_asyncio.fixture(scope='session')
 async def test_engine():
-    engine = create_async_engine("sqlite+aiosqlite:///:memory:", future=True)
+    engine = create_async_engine('sqlite+aiosqlite:///:memory:', future=True)
     async with engine.begin() as conn:
         # Cria as tabelas de teste
         await conn.run_sync(Base.metadata.create_all)

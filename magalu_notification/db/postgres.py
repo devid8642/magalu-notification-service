@@ -1,4 +1,5 @@
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
+from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
+
 from magalu_notification import settings
 
 
@@ -14,7 +15,7 @@ class PostgresConnection:
             )
             cls.CONNECTION = create_async_engine(connection_string)
         return cls.CONNECTION
-    
+
     @classmethod
     def get_session_factory(cls):
         return async_sessionmaker(cls.get_connection(), expire_on_commit=False)

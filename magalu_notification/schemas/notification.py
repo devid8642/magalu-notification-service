@@ -1,6 +1,11 @@
-from pydantic import BaseModel
 from datetime import datetime
-from magalu_notification.models.notification import Channels, NotificationStatus
+
+from pydantic import BaseModel
+
+from magalu_notification.models.notification import (
+    Channels,
+    NotificationStatus,
+)
 
 
 class SendNotificationSchema(BaseModel):
