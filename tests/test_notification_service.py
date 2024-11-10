@@ -1,6 +1,8 @@
 import pytest
 from unittest.mock import AsyncMock, MagicMock
+from magalu_notification.models.notification import Notification, NotificationStatus
 from magalu_notification.services.notification_service import NotificationService
+from magalu_notification.services.exceptions import NotificationNotFound, NotificationAlreadySended
 from magalu_notification.models.notification import Notification
 from magalu_notification.repositories.notification_repository import NotificationRepository
 
@@ -42,3 +44,47 @@ async def test_get_notification_not_found():
 
     mock_repo.get_notification.assert_called_once_with(999)
     assert fetched_notification is None
+
+
+@pytest.mark.asyncio
+async def test_cancel_notification_success(notification: Notification):
+    mock_repo = MagicMock(NotificationRepository)
+    mock_repo.get_notification = AsyncMock(return_value=notification)
+    mock_repo.update_notification = AsyncMock()
+
+    service = NotificationService(mock_repo)
+
+    await service.cancel_notification(notification.id)
+
+    mock_repo.get_notification.assert_called_once_with(notification.id)
+    assert notification.status == NotificationStatus.CANCELED
+    mock_repo.update_notification.assert_called_once_with(notification)
+
+
+@pytest.mark.asyncio
+async def test_cancel_notification_not_found():
+    mock_repo = MagicMock(NotificationRepository)
+    mock_repo.get_notification = AsyncMock(return_value=None)
+
+    service = NotificationService(mock_repo)
+
+    with pytest.raises(NotificationNotFound):
+        await service.cancel_notification(999)
+
+    mock_repo.get_notification.assert_called_once_with(999)
+
+
+@pytest.mark.asyncio
+async def test_cancel_notification_already_sent(notification: Notification):
+    notification.status = NotificationStatus.SUCCESS
+
+    mock_repo = MagicMock(NotificationRepository)
+    mock_repo.get_notification = AsyncMock(return_value=notification)
+
+    service = NotificationService(mock_repo)
+
+    with pytest.raises(NotificationAlreadySended):
+        await service.cancel_notification(notification.id)
+
+    mock_repo.get_notification.assert_called_once_with(notification.id)
+    mock_repo.update_notification.assert_not_called()
