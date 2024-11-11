@@ -13,8 +13,19 @@ from magalu_notification.services.exceptions import (
 from magalu_notification.services.notification_service import (
     get_notification_service,
 )
+from contextlib import asynccontextmanager
+from .celery import celery_app
+
 
 app = FastAPI(version='0.1.0', title='Magalu Notification API')
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    celery_app.conf.update({
+        'task_routes': {
+            'magalu_notification.celery_tasks.*': {'queue': 'default'}
+        }
+    })
 
 
 @app.post('/send/notification', status_code=status.HTTP_201_CREATED)

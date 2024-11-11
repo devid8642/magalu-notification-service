@@ -15,6 +15,7 @@ celery = "^5.4.0"
 python-decouple = "^3.8"
 pytz = "^2024.1"
 psycopg = "^3.2.3"
+redis = "^5.2.0"
 
 
 [tool.poetry.group.dev.dependencies]
